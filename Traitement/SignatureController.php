@@ -8,6 +8,13 @@ require_once(ROOT . "/DB/models/Petition.php");
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $action = $_GET['action'] ?? null;
     $petitionId = $_GET['idp'] ?? null;
+    
+    if ($action === "getLastSignatures" && $petitionId) {
+        header('Content-Type: application/json');
+        $signatures = Signature::getLastSignaturesByPetition($petitionId);
+        echo json_encode($signatures);
+        exit();
+    }
 } elseif ($_SERVER["REQUEST_METHOD"] === "POST") {
     $action = $_POST['action'] ?? null;
     $petitionId = $_POST['idp'] ?? null;
@@ -39,7 +46,7 @@ try {
             }
             
             // Redirect back to the signature form instead of petition list
-            header("Location: ../IHM/Signature/Signature.php");
+            header("Location: ../IHM/Petition/index.php");
             exit();
         } else {
             $_SESSION['error'] = "Erreur lors de l'ajout de la signature.";

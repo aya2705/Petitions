@@ -43,5 +43,22 @@ class Signature {
         }
         return 0;
     }
+
+    public static function getLastSignaturesByPetition($petitionId, $limit = 5) {
+        $conn = DB::getConnection();
+        $sql = "SELECT * FROM Signature WHERE IDP = ? ORDER BY Date DESC, Heure DESC LIMIT ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $petitionId, $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $signatures = [];
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $signatures[] = $row;
+            }
+        }
+        return $signatures;
+    }
 }
 ?>
