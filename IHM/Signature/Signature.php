@@ -1,6 +1,4 @@
 <?php
-// filepath: c:\wamp64\www\Petitions\IHM\Signature\Signature.php
-
 session_start();
 if (!isset($_SESSION['petition'])) {
     header('Location: ../../Traitement/Utilisateurs.php');
@@ -31,6 +29,7 @@ $signatureCount = $_SESSION['signatureCount'] ?? 0;
         }
         form {
             max-width: 500px;
+            margin: auto;
         }
         label {
             display: block;
@@ -73,6 +72,7 @@ $signatureCount = $_SESSION['signatureCount'] ?? 0;
             border-radius: 5px;
             margin-bottom: 20px;
             max-width: 500px;
+            margin: auto;
         }
         .last-signatures h3 {
             margin-top: 0;
