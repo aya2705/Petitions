@@ -105,10 +105,6 @@ $signatureCount = $_SESSION['signatureCount'] ?? 0;
 <body>
     <h1>Signer la pétition: <?= htmlspecialchars($petition['Titre']); ?></h1>
     
-    <!-- Display signature count -->
-    
-    
-    <!-- Last Signatures Dashboard -->
     <div class="last-signatures">
         <h3>Dernières signatures:</h3>
         <ul id="lastSignaturesList">
@@ -159,7 +155,7 @@ $signatureCount = $_SESSION['signatureCount'] ?? 0;
                 .then(response => response.json())
                 .then(signatures => {
                     const signatureList = document.getElementById("lastSignaturesList");
-                    signatureList.innerHTML = ""; // Clear current list
+                    signatureList.innerHTML = ""; 
                     
                     if (signatures.length === 0) {
                         const li = document.createElement("li");
@@ -192,16 +188,12 @@ $signatureCount = $_SESSION['signatureCount'] ?? 0;
                 });
         }
 
-        // Load signatures when page loads
         document.addEventListener("DOMContentLoaded", loadLastSignatures);
         
-        // Refresh signatures every 5 seconds
         setInterval(loadLastSignatures, 5000);
         
-        // Update signature list when form is submitted
         document.getElementById("signatureForm").addEventListener("submit", function() {
-            // The form will submit normally, and the page will reload
-            // But just in case we're doing AJAX in the future:
+            
             setTimeout(loadLastSignatures, 1000);
         });
     </script>

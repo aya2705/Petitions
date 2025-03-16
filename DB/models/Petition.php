@@ -17,10 +17,10 @@ class Petition {
         $signature_table = in_array('signature', $tables) ? 'signature' : 'Signature';
         
         $sql = "SELECT p.*, COUNT(s.IDS) as signature_count 
-                FROM $petition_table p 
-                LEFT JOIN $signature_table s ON p.IDP = s.IDP 
-                GROUP BY p.IDP 
-                ORDER BY p.DatePublic DESC";
+            FROM $petition_table p 
+            LEFT JOIN $signature_table s ON p.IDP = s.IDP 
+            GROUP BY p.IDP 
+            ORDER BY p.IDP DESC";
                 
         $result = $conn->query($sql);
         

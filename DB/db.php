@@ -6,8 +6,8 @@ class DB {
         if (self::$conn === null) {
             $servername = "localhost";
             $username = "root";
-            $password = "";
-            $database = "petition_bd";
+            $password = "nassimnassim12";
+            $database = "petitions";
 
             // Create connection
             self::$conn = new mysqli($servername, $username, $password, $database);

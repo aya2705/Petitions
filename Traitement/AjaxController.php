@@ -5,7 +5,6 @@ define("ROOT", dirname(__DIR__));
 require_once(ROOT . "/DB/models/Petition.php");
 require_once(ROOT . "/DB/models/Signature.php");
 
-// Gérer différentes requêtes AJAX
 $action = $_GET['action'] ?? '';
 
 header('Content-Type: application/json');
@@ -15,7 +14,6 @@ switch ($action) {
         $lastPetition = Petition::getLastPetition();
         
         if ($lastPetition) {
-            // Get signature count for this petition
             $signatureCount = Signature::countSignaturesByPetition($lastPetition['IDP']);
             
             echo json_encode([
@@ -47,7 +45,6 @@ switch ($action) {
         break;
 
         case 'get_signature_counts':
-            // Get all petition IDs from the request
             $petition_ids = isset($_GET['ids']) ? explode(',', $_GET['ids']) : [];
             
             if (empty($petition_ids)) {
@@ -57,7 +54,7 @@ switch ($action) {
             
             $counts = [];
             foreach ($petition_ids as $id) {
-                $id = (int)$id; // Ensure ID is an integer
+                $id = (int)$id;
                 $counts[$id] = Signature::countSignaturesByPetition($id);
             }
             

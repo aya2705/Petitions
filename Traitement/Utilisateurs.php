@@ -15,12 +15,10 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 
 try {
     if ($action === "sign" && $petitionId) {
-        // Get petition details and redirect to signature form
         $petition = Petition::getPetitionById($petitionId);
         if ($petition) {
             $_SESSION['petition'] = $petition;
             
-            // Get signature count for this petition
             $signatureCount = Signature::countSignaturesByPetition($petitionId);
             $_SESSION['signatureCount'] = $signatureCount;
             
@@ -35,7 +33,7 @@ try {
         $data = [
             'titre' => $_POST['titre'],
             'description' => $_POST['description'],
-            'datePublic' => date('Y-m-d'), // Current date
+            'datePublic' => date('Y-m-d'), 
             'dateFinP' => $_POST['dateFinP'],
             'porteurP' => $_POST['porteurP'],
             'email' => $_POST['email'],
@@ -44,7 +42,6 @@ try {
         if ($result = Petition::addPetition($data)) {
             $_SESSION['message'] = "Pétition ajoutée avec succès.";
             
-            // IMPORTANT: Load all petitions after adding one
             $petitions = Petition::getAllPetitions();
             $_SESSION['petitions'] = $petitions;
         } else {
@@ -53,7 +50,6 @@ try {
         header("Location: ../IHM/Petition/index.php");
         exit();
     } else {
-        // Default: List all petitions
         $petitions = Petition::getAllPetitions();
         $_SESSION['petitions'] = $petitions;
         header("Location: ../IHM/Petition/index.php");

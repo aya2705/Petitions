@@ -35,17 +35,13 @@ try {
         if (Signature::addSignature($data)) {
             $_SESSION['message'] = "Signature ajoutée avec succès.";
             
-            // Update signature count in session
             $newCount = Signature::countSignaturesByPetition($data['idp']);
             $_SESSION['signatureCount'] = $newCount;
             
-            // Get petition again to ensure fresh data
             $petition = Petition::getPetitionById($data['idp']);
             if ($petition) {
                 $_SESSION['petition'] = $petition;
             }
-            
-            // Redirect back to the signature form instead of petition list
             header("Location: ../IHM/Petition/index.php");
             exit();
         } else {

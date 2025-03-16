@@ -64,7 +64,17 @@ session_start();
         }
         a:hover {
             text-decoration: underline;
+        
         }
+
+        @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+tr.petition-row[data-id] {
+    transition: background-color 1s;
+}
     </style>
 </head>
 <body>
@@ -83,6 +93,9 @@ session_start();
     <div class="top-petition">
         <strong>Titre :</strong> <span id="top-title">Chargement...</span> <br>
         <strong>Nombre de signatures :</strong> <span id="top-signatures">0</span>
+        <br>
+        <br>
+        <a href="ajouter_petition.php">Ajouter une pétition</a>
     </div>
     
     <table border="1">
@@ -114,7 +127,7 @@ session_start();
         <?php endif; ?>
     </table>
     <br>
-    <a href="ajouter_petition.php">Ajouter une pétition</a>
+    
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -134,48 +147,58 @@ session_start();
         }
 
         function checkNewPetition() {
-            $.ajax({
-                url: "../../Traitement/AjaxController.php?action=check_new_petition",
-                method: "GET",
-                dataType: "json",
-                success: function(response) {
-                    if (response.id !== null && response.id > lastPetitionId) {
-                        lastPetitionId = response.id;
+    $.ajax({
+        url: "../../Traitement/AjaxController.php?action=check_new_petition",
+        method: "GET",
+        dataType: "json",
+        success: function(response) {
+            if (response.id !== null && response.id > lastPetitionId) {
+                lastPetitionId = response.id;
 
-                        // Vérifie si cette pétition est déjà dans le tableau
-                        if ($('.petition-row[data-id="'+response.id+'"]').length === 0) {
-                            // Ajouter une nouvelle ligne dans le tableau des pétitions
-                            let newRow = `
-                                <tr class="petition-row" data-id="${response.id}">
-                                    <td>${response.titre}</td>
-                                    <td>${response.description}</td>
-                                    <td>${response.date_public}</td>
-                                    <td>${response.date_fin}</td>
-                                    <td>${response.porteur}</td>
-                                    <td>${response.email}</td>
-                                    <td class="signature-count">${response.signature_count || 0}</td>
-                                    <td>
-                                        <a href="../../Traitement/Utilisateurs.php?action=sign&id=${response.id}">Signer</a>
-                                    </td>
-                                </tr>
-                            `;
-                            $("table").append(newRow);
+                // Vérifie si cette pétition est déjà dans le tableau
+                if ($('.petition-row[data-id="'+response.id+'"]').length === 0) {
+                    // Créer une nouvelle ligne pour le tableau
+                    let newRow = `
+                        <tr class="petition-row" data-id="${response.id}">
+                            <td>${response.titre}</td>
+                            <td>${response.description}</td>
+                            <td>${response.date_public}</td>
+                            <td>${response.date_fin}</td>
+                            <td>${response.porteur}</td>
+                            <td>${response.email}</td>
+                            <td class="signature-count">${response.signature_count || 0}</td>
+                            <td>
+                                <a href="../../Traitement/Utilisateurs.php?action=sign&id=${response.id}">Signer</a>
+                            </td>
+                        </tr>
+                    `;
+                    
+                    // Ajouter au début du tableau (après la ligne d'en-tête)
+                    $("table tr:first").after(newRow);
+                    
+                    // Ajouter une classe pour l'animation d'apparition
+                    const addedRow = $(`tr.petition-row[data-id="${response.id}"]`);
+                    addedRow.css("background-color", "#e6ffe6");
+                    setTimeout(() => {
+                        addedRow.css("transition", "background-color 1s");
+                        addedRow.css("background-color", "");
+                    }, 100);
 
-                            // Afficher une notification
-                            let notification = document.createElement("div");
-                            notification.innerHTML = `📢 Nouvelle pétition ajoutée : <b>${response.titre}</b> par <b>${response.porteur}</b>`;
-                            notification.classList.add("notification");
-                            document.body.appendChild(notification);
+                    // Afficher une notification
+                    let notification = document.createElement("div");
+                    notification.innerHTML = `📢 Nouvelle pétition ajoutée : <b>${response.titre}</b> par <b>${response.porteur}</b>`;
+                    notification.classList.add("notification");
+                    document.body.appendChild(notification);
 
-                            // Supprimer la notification après 5 secondes
-                            setTimeout(() => {
-                                notification.remove();
-                            }, 5000);
-                        }
-                    }
+                    // Supprimer la notification après 5 secondes
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 5000);
                 }
-            });
+            }
         }
+    });
+}
 
         function updateTopPetition() {
             $.ajax({
