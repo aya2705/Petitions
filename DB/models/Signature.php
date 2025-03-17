@@ -28,7 +28,6 @@ class Signature {
         return $stmt->execute() ? $conn->insert_id : false;
     }
 
-    // Add this new method for counting signatures
     public static function countSignaturesByPetition($petitionId) {
         $conn = DB::getConnection();
         $sql = "SELECT COUNT(*) as count FROM Signature WHERE IDP = ?";

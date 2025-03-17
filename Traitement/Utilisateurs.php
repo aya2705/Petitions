@@ -37,6 +37,7 @@ try {
             'dateFinP' => $_POST['dateFinP'],
             'porteurP' => $_POST['porteurP'],
             'email' => $_POST['email'],
+            'password' => password_hash($_POST['password'], PASSWORD_DEFAULT), // Hash du mot de passe
         ];
 
         if ($result = Petition::addPetition($data)) {

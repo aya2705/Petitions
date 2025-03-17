@@ -70,6 +70,8 @@ session_start();
         
         <label for="email">Email :</label>
         <input type="email" name="email" required><br>
+        <label for="password">Mot de passe :</label>
+<input type="password" name="password" required><br>
         
         <button type="submit">Ajouter</button>
     </form>

@@ -99,33 +99,34 @@ tr.petition-row[data-id] {
     </div>
     
     <table border="1">
-        <tr>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Date de Publication</th>
-            <th>Date de Fin</th>
-            <th>Porteur</th>
-            <th>Email</th>
-            <th>Signatures</th>
-            <th>Action</th>
+    <tr>
+        <th>Titre</th>
+        <th>Description</th>
+        <th>Date de Publication</th>
+        <th>Date de Fin</th>
+        <th>Porteur</th>
+        <th>Email</th>
+        <th>Signatures</th>
+        <th>Action</th>
+    </tr>
+    <?php if (isset($_SESSION['petitions'])): ?>
+        <?php foreach ($_SESSION['petitions'] as $row): ?>
+        <tr class="petition-row" data-id="<?= $row['IDP']; ?>">
+            <td><?= htmlspecialchars($row['Titre']); ?></td>
+            <td><?= htmlspecialchars($row['Description']); ?></td>
+            <td><?= htmlspecialchars($row['DatePublic']); ?></td>
+            <td><?= htmlspecialchars($row['DateFinP']); ?></td>
+            <td><?= htmlspecialchars($row['PorteurP']); ?></td>
+            <td><?= htmlspecialchars($row['Email']); ?></td>
+            <td class="signature-count"><?= htmlspecialchars($row['signature_count'] ?? 0); ?></td>
+            <td>
+                <a href="modifier_petition.php?id=<?= $row['IDP']; ?>">Modifier</a> |
+                <a href="supprimer_petition.php?id=<?= $row['IDP']; ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette pétition ?');">Supprimer</a>
+            </td>
         </tr>
-        <?php if (isset($_SESSION['petitions'])): ?>
-            <?php foreach ($_SESSION['petitions'] as $row): ?>
-            <tr class="petition-row" data-id="<?= $row['IDP']; ?>">
-                <td><?= htmlspecialchars($row['Titre']); ?></td>
-                <td><?= htmlspecialchars($row['Description']); ?></td>
-                <td><?= htmlspecialchars($row['DatePublic']); ?></td>
-                <td><?= htmlspecialchars($row['DateFinP']); ?></td>
-                <td><?= htmlspecialchars($row['PorteurP']); ?></td>
-                <td><?= htmlspecialchars($row['Email']); ?></td>
-                <td class="signature-count"><?= htmlspecialchars($row['signature_count'] ?? 0); ?></td> 
-                <td>
-                    <a href="../../Traitement/Utilisateurs.php?action=sign&id=<?= $row['IDP']; ?>">Signer</a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </table>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</table>
     <br>
     
 
@@ -155,9 +156,9 @@ tr.petition-row[data-id] {
             if (response.id !== null && response.id > lastPetitionId) {
                 lastPetitionId = response.id;
 
-                // Vérifie si cette pétition est déjà dans le tableau
+               
                 if ($('.petition-row[data-id="'+response.id+'"]').length === 0) {
-                    // Créer une nouvelle ligne pour le tableau
+                   
                     let newRow = `
                         <tr class="petition-row" data-id="${response.id}">
                             <td>${response.titre}</td>
@@ -173,10 +174,10 @@ tr.petition-row[data-id] {
                         </tr>
                     `;
                     
-                    // Ajouter au début du tableau (après la ligne d'en-tête)
+                    
                     $("table tr:first").after(newRow);
                     
-                    // Ajouter une classe pour l'animation d'apparition
+                    
                     const addedRow = $(`tr.petition-row[data-id="${response.id}"]`);
                     addedRow.css("background-color", "#e6ffe6");
                     setTimeout(() => {
@@ -184,13 +185,13 @@ tr.petition-row[data-id] {
                         addedRow.css("background-color", "");
                     }, 100);
 
-                    // Afficher une notification
+                 
                     let notification = document.createElement("div");
                     notification.innerHTML = `📢 Nouvelle pétition ajoutée : <b>${response.titre}</b> par <b>${response.porteur}</b>`;
                     notification.classList.add("notification");
                     document.body.appendChild(notification);
 
-                    // Supprimer la notification après 5 secondes
+                   
                     setTimeout(() => {
                         notification.remove();
                     }, 5000);
@@ -213,13 +214,13 @@ tr.petition-row[data-id] {
         }
 
         function updateSignatureCounts() {
-            // Collect all petition IDs from the table
+            
             let petitionIds = [];
             $('.petition-row').each(function() {
                 petitionIds.push($(this).data('id'));
             });
             
-            // If no petitions on page, don't make the request
+            
             if (petitionIds.length === 0) return;
             
             $.ajax({
@@ -228,16 +229,16 @@ tr.petition-row[data-id] {
                 dataType: "json",
                 success: function(response) {
                     if (response.success && response.counts) {
-                        // Update each petition's signature count
+                     
                         for (const [id, count] of Object.entries(response.counts)) {
                             const cell = $(`.petition-row[data-id="${id}"] .signature-count`);
                             const currentCount = parseInt(cell.text());
                             
-                            // Only update if the count changed
+                            
                             if (currentCount !== count) {
                                 cell.text(count);
                                 
-                                // Animation to highlight the change
+                                
                                 cell.addClass('updated');
                                 setTimeout(() => {
                                     cell.removeClass('updated');
@@ -253,15 +254,15 @@ tr.petition-row[data-id] {
             loadLastPetitionId();
             updateTopPetition();
             
-            // Vérifier pour nouvelles pétitions toutes les 5 secondes
+          
             setInterval(checkNewPetition, 5000);
             
-            // Mettre à jour la pétition la plus signée toutes les 5 secondes
-            setInterval(updateTopPetition, 5000);
             
-            // Update signature counts every 3 seconds
+            setInterval(updateTopPetition, 5000);
+           
             setInterval(updateSignatureCounts, 3000);
         });
+
     </script>
 </body>
 </html>
