@@ -108,6 +108,7 @@ tr.petition-row[data-id] {
         <th>Email</th>
         <th>Signatures</th>
         <th>Action</th>
+        <th>Function</th>
     </tr>
     <?php if (isset($_SESSION['petitions'])): ?>
         <?php foreach ($_SESSION['petitions'] as $row): ?>
@@ -119,6 +120,9 @@ tr.petition-row[data-id] {
             <td><?= htmlspecialchars($row['PorteurP']); ?></td>
             <td><?= htmlspecialchars($row['Email']); ?></td>
             <td class="signature-count"><?= htmlspecialchars($row['signature_count'] ?? 0); ?></td>
+                <td>
+                    <a href="../../Traitement/Utilisateurs.php?action=sign&id=<?= $row['IDP']; ?>">Signer</a>
+                </td>
             <td>
                 <a href="modifier_petition.php?id=<?= $row['IDP']; ?>">Modifier</a> |
                 <a href="supprimer_petition.php?id=<?= $row['IDP']; ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette pétition ?');">Supprimer</a>
